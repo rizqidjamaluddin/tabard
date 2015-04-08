@@ -37,6 +37,19 @@ class FlatFileBlog
         return $this->getIndexFromFilename(end($files));
     }
 
+    public function getMeta($id = null)
+    {
+        if (!$id) {
+            $id = $this->getLatestFile();
+        }
+
+        $path = $this->compiled . $id . '.meta.json';
+        if (!file_exists($path)) {
+            return null;
+        }
+        return file_get_contents($path);
+    }
+
     public function getNextFile($id = null)
     {
         // null means we're getting the second post
@@ -75,7 +88,7 @@ class FlatFileBlog
             }
 
             // parse and build
-            $fileContents = ltrim(file_get_contents($this->dir . $file), '\-\t\n\r\0\x0B');
+            $fileContents = ltrim(file_get_contents($this->dir . $file), "-\t\n\r\0\x0B");
 
             // extract yaml top
             if (strpos($fileContents, '---') !== false) {
