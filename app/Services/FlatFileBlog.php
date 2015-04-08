@@ -47,7 +47,7 @@ class FlatFileBlog
         if (!file_exists($path)) {
             return null;
         }
-        return file_get_contents($path);
+        return json_decode(file_get_contents($path));
     }
 
     public function getNextFile($id = null)
@@ -64,6 +64,25 @@ class FlatFileBlog
         foreach ($files as $file) {
             $index = $this->getIndexFromFilename($file);
             if ($index < $id) {
+                return $index;
+            }
+        }
+        return null;
+    }
+
+
+    public function getPreviousFile($id = null)
+    {
+        if (!$id) {
+            $id = $this->getLatestFile();
+        }
+
+        $files = scandir($this->compiled);
+        sort($files, SORT_NUMERIC);
+
+        foreach ($files as $file) {
+            $index = $this->getIndexFromFilename($file);
+            if ($index > $id) {
                 return $index;
             }
         }

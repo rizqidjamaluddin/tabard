@@ -22,6 +22,7 @@ class BlogController extends Controller
         return view('blog')
             ->with('post', $post)
             ->with('next', $this->flatFileBlog->getNextFile())
+            ->with('previous', $this->flatFileBlog->getPreviousFile())
             ->with('meta', $this->flatFileBlog->getMeta());
     }
     public function post($id)
@@ -33,6 +34,7 @@ class BlogController extends Controller
         return view('blog')
             ->with('post', $post)
             ->with('next', $this->flatFileBlog->getNextFile($id))
+            ->with('previous', $this->flatFileBlog->getPreviousFile($id))
             ->with('meta', $this->flatFileBlog->getMeta($id));
     }
 
