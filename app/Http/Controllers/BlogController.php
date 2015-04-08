@@ -19,7 +19,10 @@ class BlogController extends Controller
         if (!$post) {
             return view('errors.404');
         }
-        return view('blog')->with('post', $post)->with('next', $this->flatFileBlog->getNextFile());
+        return view('blog')
+            ->with('post', $post)
+            ->with('next', $this->flatFileBlog->getNextFile())
+            ->with('meta', $this->flatFileBlog->getMeta());
     }
     public function post($id)
     {
@@ -27,7 +30,10 @@ class BlogController extends Controller
         if (!$post) {
             return view('errors.404');
         }
-        return view('blog')->with('post', $post)->with('next', $this->flatFileBlog->getNextFile($id));
+        return view('blog')
+            ->with('post', $post)
+            ->with('next', $this->flatFileBlog->getNextFile($id))
+            ->with('meta', $this->flatFileBlog->getMeta($id));
     }
 
 }

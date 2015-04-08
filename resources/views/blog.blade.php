@@ -8,6 +8,8 @@
 
 {!! $post !!}
 
+Meta: {{ $meta }}
+
 Next: {{ $next }}
 
 </body>
