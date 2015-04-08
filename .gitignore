@@ -5,3 +5,4 @@
 /storage/content/*.md
 /storage/compiled/*.html
 /storage/compiled/*.json
+/storage/compiled/*.md5

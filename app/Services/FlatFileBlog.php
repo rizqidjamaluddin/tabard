@@ -93,17 +93,23 @@ class FlatFileBlog
     {
         $markdown = new \Parsedown();
 
+
         $files = scandir($this->dir);
         foreach ($files as $file) {
 
             $identifier = $this->getIndexFromFilename($file);
+
+            // files that don't fit convention just aren't managed
             if (!$identifier) {
                 continue;
             }
 
             // check pre-existing
-            if (file_exists($this->compiled . $identifier . '.html')) {
-                continue;
+            if (file_exists($this->compiled . $identifier . '.md5')) {
+                // match manifest
+                if (file_get_contents($this->compiled . $identifier . '.md5') == md5_file($this->dir . $file)) {
+                    continue;
+                }
             }
 
             // parse and build
@@ -120,18 +126,24 @@ class FlatFileBlog
             }
 
             $parsed = $markdown->parse($mdPart);
-            $file = fopen($this->compiled . $identifier . '.html', 'w+');
-            fwrite($file, $parsed);
+            $htmlFile = fopen($this->compiled . $identifier . '.html', 'w+');
+            fwrite($htmlFile, $parsed);
 
             // build metadata
             $metadata = $this->buildMetadata(Spyc::YAMLLoadString($yamlPart));
             $metadataFile = fopen($this->compiled . $identifier . '.meta.json', 'w+');
             fwrite($metadataFile, $metadata);
+
+            // build manifest
+            $manifest = md5_file($this->dir . $file);
+            $manifestFile = fopen($this->compiled . $identifier . '.md5', 'w+');
+            fwrite($manifestFile, $manifest);
         }
     }
 
     protected function buildMetadata(Array $data)
     {
+        $data['lastCompiled'] = time();
         return json_encode($data);
     }
 
