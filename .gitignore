@@ -1,0 +1,7 @@
+/vendor
+/node_modules
+.env
+.idea
+/storage/content/*.md
+/storage/compiled/*.html
+/storage/compiled/*.json
