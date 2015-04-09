@@ -174,7 +174,7 @@ class FlatFileBlog
             // build metadata
             $rawMetadata = Spyc::YAMLLoadString($yamlPart);
             $rawMetadata = $this->normalizeMetadata($rawMetadata);
-            $metadata = $this->buildMetadata($rawMetadata, $slug);
+            $metadata = $this->buildMetadata($rawMetadata, $identifier, $slug);
             $metadataFile = fopen($this->compiled . $identifier . '.meta.json', 'w+');
             fwrite($metadataFile, $metadata);
 
@@ -212,9 +212,10 @@ class FlatFileBlog
         }
     }
 
-    protected function buildMetadata(Array $data, $slug = '')
+    protected function buildMetadata(Array $data, $identifier = '', $slug = '')
     {
         $data['lastCompiled'] = time();
+        $data['identifier'] = $identifier;
         $data['slug'] = $slug;
         return json_encode($data);
     }
@@ -261,8 +262,23 @@ class FlatFileBlog
     {
         if (!isset($rawMetadata['title']) && isseT($rawMetadata['headline'])) {
             $rawMetadata['title'] = $rawMetadata['headline'];
-            return $rawMetadata;
         }
+        $rawMetadata = array_change_key_case($rawMetadata, CASE_LOWER);
         return $rawMetadata;
+    }
+
+    public function getAllMetadata()
+    {
+        if (Cache::has('allMetadata')) return Cache::get('allMetadata');
+        $result = [];
+        $files = glob($this->compiled . '*.meta.json');
+        sort($files, SORT_NATURAL);
+        $files = array_reverse($files);
+        foreach ($files as $file) {
+            $meta = json_decode(file_get_contents($file));
+            $result[] = $meta;
+        }
+        Cache::forever('allMetadata', $result);
+        return $result;
     }
 }

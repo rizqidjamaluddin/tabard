@@ -63,7 +63,8 @@ class BlogController extends Controller
 
     public function archive()
     {
-        return view('archive');
+        return view('archive')
+            ->with('entries', $this->flatFileBlog->getAllMetadata());
     }
 
 }
