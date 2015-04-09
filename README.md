@@ -4,9 +4,20 @@ I was definitely not under any influence when I wrote this. At _all_.
 
 Not-even-beta status. But it works.
 
+## Install
+
+```
+git clone https://github.com/rizqidjamaluddin/tabard.git
+composer install
+```
+
+Doesn't require any database connections. It can use the default file cache fine. Make it redis if you really care, because redis is just cool like that.
+
+Hang on, what do you mean by "tests"? I wrote this in a hurry at midnight, did you really think I thought this through?
+
 ## Usage
 
-Write blog posts in the `app/storage/content` folder. Name the files like `1-hello-world`, `2-bananas`, `4-watermelons` - the number at the beginning needs to be sequential, but you can skip numbers. Unix timestamps are fine. Posts will be ordered in that order.
+Write blog posts in the `app/storage/content` folder. Name the files like `1-hello-world`, `2-bananas`, `4-watermelons` - the number at the beginning needs to be sequential, but you can skip numbers. Unix timestamps are fine. Posts will be ordered in that order. The rest of the name will be used as the URL slug. Hopefully.
 
 Files contain a YAML metadata section up top, then markdown:
 
