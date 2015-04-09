@@ -15,7 +15,7 @@ body:before {
 .content {
     font-size: 22px;
     width: 900px;
-    margin: 80px auto;
+    margin: 40px auto;
     padding: 0 20px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -37,10 +37,51 @@ body:before {
     }
 }
 
+.header {
+    line-height: 1.4em;
+    text-align: center;
+    font-size: 0.7em;
+    margin-bottom: 80px;
+    margin-top: 60px;
+    color: #888;
+}
+
+.header .name {
+    color: #2A4A47;
+    font-weight: 700;
+    font-size: 1.4em;
+    font-family: "source-code-pro", monospace;
+}
+
+.header .name a:hover, .header .name a, .header .name a:visited{
+    color: #2A4A47;
+    border: none;
+}
+
+.header a, .header a:visited {
+    color:  #59A1C5;
+    border: 0;
+}
+
+.header a:hover {
+    border-bottom: 1px solid #2A4A47;
+}
+
 h1 {
     font-size: 2.8em;
-    font-weight: bold;
+    line-height: 1.5em;
     color: black;
+    font-weight: 900;
+    text-align: center;
+}
+
+h2 {
+    font-size: 1.5em;
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    line-height: 1.5em;
+    color: black;
+    font-weight: 700;
 }
 
 p {
@@ -59,18 +100,24 @@ strong {
     font-weight: 700;
 }
 
-h1 {
-    font-weight: 900;
-}
-
 a {
     color: #59A1C5;
     text-decoration: none;
     border-bottom: 1px solid #72BAD9;
 }
 
+.links {
+    margin-top: 3em;
+}
+
 .links a {
-    border: none;
+    color: #59A1C5 !important;
+    border-bottom: 1px solid transparent;
+}
+
+.links a:hover {
+    color: #2A4A47 !important;
+    border-bottom: 1px solid #2A4A47;
 }
 
 .older-link {
@@ -80,6 +127,11 @@ a {
 a:hover {
     color: #2A4A47;
     border-color: #2A4A47;
+}
+
+a:visited {
+    color: #343347;
+    border-color: #343347;
 }
 
 p code {
@@ -94,7 +146,7 @@ code {
 
 .footer {
     clear: both;
-    padding-top: 40px;
+    padding: 80px 50px 0;
     text-align: center;
     font-size: 0.8em;
     color: #888;

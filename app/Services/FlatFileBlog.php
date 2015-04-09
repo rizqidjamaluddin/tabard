@@ -1,4 +1,5 @@
 <?php  namespace App\Services; 
+use Cache;
 use Michelf\SmartyPants;
 use Spyc;
 
@@ -15,53 +16,74 @@ class FlatFileBlog
 
     public function getIdFromSlug($slug)
     {
+        if (Cache::has('slugId:'.$slug)) return Cache::get('slugId:'.$slug);
         if (!file_exists($this->slugPath($slug))) {
             return null;
         }
 
-        return file_get_contents($this->slugPath($slug));
+        $result = file_get_contents($this->slugPath($slug));
+        Cache::forever('slugId:'.$slug, $result);
+        return $result;
     }
 
     public function getPost($id = null)
     {
-//        $this->generateContent();
         if (!$id) {
             $id = $this->getLatestFile();
         }
+
+        if (Cache::has('post:'.$id)) return Cache::get('post:'.$id);
+
         $path = $this->compiled . $id . '.html';
         if (!file_exists($path)) {
             return false;
         }
 
-        return file_get_contents($path);
+        $result = file_get_contents($path);
+        Cache::forever('post:'.$id, $result);
+        return $result;
     }
 
-    protected function getLatestFile()
+    public function getLatestFile()
     {
+        if (Cache::has('latest')) return Cache::get('latest');
         $files = glob($this->compiled . '*.html');
         sort($files, SORT_NATURAL);
         array_walk($files, function(&$i){ $i = basename($i); });
-        return pathinfo(end($files), PATHINFO_FILENAME);
+        $result = pathinfo(end($files), PATHINFO_FILENAME);
+        Cache::forever('latest', $result);
+        return $result;
     }
 
     public function getMeta($id = null)
     {
         if (!$id) {
-            $id = $this->getLatestFile();
+            return null;
+        }
+
+        if (Cache::has('metadata:'.$id)) {
+            return Cache::get('metadata:'.$id);
         }
 
         $path = $this->compiled . $id . '.meta.json';
         if (!file_exists($path)) {
             return null;
         }
-        return json_decode(file_get_contents($path));
+        $result = json_decode(file_get_contents($path));
+        Cache::forever('metadata:'.$id, $result);
+        return $result;
     }
+
 
     public function getOlderFile($id = null)
     {
         // null means we're getting the second post
         if (!$id) {
             $id = $this->getLatestFile();
+        }
+
+        if (Cache::has('olderFile:'.$id)) {
+            return Cache::get('olderFile:'.$id);
         }
 
         $files = glob($this->compiled . '*.html');
@@ -72,9 +94,11 @@ class FlatFileBlog
         foreach ($files as $file) {
             $index = $this->getIndexFromFilename($file);
             if ($index < $id) {
+                Cache::forever('olderFile:'.$id, $index);
                 return $index;
             }
         }
+        Cache::forever('olderFile:'.$id, null);
         return null;
     }
 
@@ -85,6 +109,10 @@ class FlatFileBlog
             $id = $this->getLatestFile();
         }
 
+        if (Cache::has('newerFile:'.$id)) {
+            return Cache::get('newerFile:'.$id);
+        }
+
         $files = glob($this->compiled . '*.html');
         sort($files, SORT_NATURAL);
         array_walk($files, function(&$i){ $i = basename($i); });
@@ -92,19 +120,19 @@ class FlatFileBlog
         foreach ($files as $file) {
             $index = $this->getIndexFromFilename($file);
             if ($index > $id) {
+                Cache::forever('newerFile:'.$id, $index);
                 return $index;
             }
         }
+        Cache::forever('newerFile:'.$id, null);
         return null;
     }
 
     public function getSlugFromId($id)
     {
-        if (!file_exists($this->compiled . $id . '.meta.json')) {
-            return null;
-        }
-        $meta = json_decode(file_get_contents($this->compiled . $id . '.meta.json'));
-        return $meta->slug;
+        $metadata = $this->getMeta($id);
+        if (!$metadata) return null;
+        return $metadata->slug;
     }
 
     public function generateContent()

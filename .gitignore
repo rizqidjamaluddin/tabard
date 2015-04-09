@@ -8,3 +8,4 @@
 /storage/compiled/*.md5
 /storage/compiled/*.slug
 .DS_Store
+_ide_helper.php

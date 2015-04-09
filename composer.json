@@ -8,7 +8,8 @@
 		"laravel/framework": "5.0.*",
         "erusev/parsedown": "dev-master",
       "mustangostang/spyc": "0.5.*@dev",
-      "michelf/php-smartypants": "1.6.0-beta1"
+      "michelf/php-smartypants": "1.6.0-beta1",
+		"predis/predis": "~1.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",

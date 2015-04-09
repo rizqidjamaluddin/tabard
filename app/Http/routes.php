@@ -13,5 +13,5 @@
 
 Route::get('/', 'BlogController@index');
 Route::get('/rebuild', 'BlogController@rebuild');
-Route::get('/eager/{post}', 'BlogController@getBody');
+Route::get('/archive', 'BlogController@archive');
 Route::get('/{post}', 'BlogController@post');
