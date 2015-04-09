@@ -13,7 +13,7 @@ composer install
 
 Doesn't require any database connections. It can use the default file cache fine. Make it redis if you really care, because redis is just cool like that.
 
-Hang on, what do you mean by "tests"? I wrote this in a hurry at midnight, did you really think I thought this through?
+Hang on, what do you mean by "tests"? I wrote this in a hurry at midnight, did you really think I thought this through? Dude, just look at all those globs and scandirs. This project probably qualifies as a weapon just because showing it to a TDD practicioner will cause them to spontaneously combust.
 
 ## Usage
 
