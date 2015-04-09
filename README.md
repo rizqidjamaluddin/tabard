@@ -2,7 +2,9 @@
 
 I was definitely not under any influence when I wrote this. At _all_.
 
-Not-even-beta status. But it works.
+Not-even-beta status. But it works. Kind of.
+
+Don't use it if you're not willing to go in and figure out how the various bits function.
 
 ## Install
 
@@ -22,7 +24,7 @@ Write blog posts in the `app/storage/content` folder. Name the files like `1-hel
 Files contain a YAML metadata section up top, then markdown:
 
 ```
-title: Post Title
+headline: Post Title
 ---
 
 # Hello World
