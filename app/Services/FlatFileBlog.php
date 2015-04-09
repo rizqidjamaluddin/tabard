@@ -179,6 +179,10 @@ class FlatFileBlog
             fwrite($metadataFile, $metadata);
 
             // build content
+
+            if (isset($rawMetadata['excerpt'])) {
+                $mdPart = '<p class="excerpt">' . $rawMetadata['excerpt'] . "</p>\n\n" . $mdPart;
+            }
             if (isset($rawMetadata['headline'])) {
                 $mdPart = '# ' . $rawMetadata['headline'] . "\n\n" . $mdPart;
             }

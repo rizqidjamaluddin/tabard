@@ -84,7 +84,7 @@ h2 {
     font-weight: 700;
 }
 
-p {
+p, ul, ol {
     margin: 25px 0;
     line-height: 1.5em;
     color: #38262E;
@@ -129,9 +129,10 @@ a:hover {
     border-color: #2A4A47;
 }
 
-a:visited {
-    color: #343347;
-    border-color: #343347;
+.excerpt {
+    text-align: center;
+    font-style: italic;
+    margin-bottom: 4em;
 }
 
 p code {
@@ -142,6 +143,17 @@ code {
     font-family: "source-code-pro", monospace;
     font-size: 0.8em;
     line-height: 1em;
+}
+
+ol {
+    list-style-type: decimal;
+}
+ul {
+    list-style-type: square;
+}
+
+strong {
+    font-weight: 700;
 }
 
 .footer {
