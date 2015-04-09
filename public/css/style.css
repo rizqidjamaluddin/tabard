@@ -14,8 +14,27 @@ body:before {
 
 .content {
     font-size: 22px;
-    width: 60%;
+    width: 900px;
     margin: 80px auto;
+    padding: 0 20px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-weight: 300;
+}
+
+@media screen and (max-width: 900px){
+    .content {
+        font-size: 20px;
+        width: 600px;
+    }
+}
+
+@media screen and (max-width: 600px){
+    .content {
+        font-size: 16px;
+        width: 100% !important;
+    }
 }
 
 h1 {
@@ -28,12 +47,34 @@ p {
     margin: 25px 0;
     line-height: 1.5em;
     color: #38262E;
+    font-weight: 300;
+}
+
+em {
+    font-weight: 300;
+    font-style: italic;
+}
+
+strong {
+    font-weight: 700;
+}
+
+h1 {
+    font-weight: 900;
 }
 
 a {
     color: #59A1C5;
     text-decoration: none;
     border-bottom: 1px solid #72BAD9;
+}
+
+.links a {
+    border: none;
+}
+
+.older-link {
+    float: right;
 }
 
 a:hover {
@@ -49,4 +90,13 @@ code {
     font-family: "source-code-pro", monospace;
     font-size: 0.8em;
     line-height: 1em;
+}
+
+.footer {
+    clear: both;
+    padding-top: 40px;
+    text-align: center;
+    font-size: 0.8em;
+    color: #888;
+    font-style: italic;
 }

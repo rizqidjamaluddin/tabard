@@ -57,7 +57,7 @@ class FlatFileBlog
         return json_decode(file_get_contents($path));
     }
 
-    public function getNextFile($id = null)
+    public function getOlderFile($id = null)
     {
         // null means we're getting the second post
         if (!$id) {
@@ -79,7 +79,7 @@ class FlatFileBlog
     }
 
 
-    public function getPreviousFile($id = null)
+    public function getNewerFile($id = null)
     {
         if (!$id) {
             $id = $this->getLatestFile();
@@ -143,16 +143,22 @@ class FlatFileBlog
                 $mdPart = $fileContents;
             }
 
+            // build metadata
+            $rawMetadata = Spyc::YAMLLoadString($yamlPart);
+            $rawMetadata = $this->normalizeMetadata($rawMetadata);
+            $metadata = $this->buildMetadata($rawMetadata, $slug);
+            $metadataFile = fopen($this->compiled . $identifier . '.meta.json', 'w+');
+            fwrite($metadataFile, $metadata);
+
+            // build content
+            if (isset($rawMetadata['headline'])) {
+                $mdPart = '# ' . $rawMetadata['headline'] . "\n\n" . $mdPart;
+            }
             $parsed = $markdown->parse($mdPart);
             $parsed = str_replace('&quot;', '"', $parsed);
             $parsed = SmartyPants::defaultTransform($parsed);
             $htmlFile = fopen($this->compiled . $identifier . '.html', 'w+');
             fwrite($htmlFile, $parsed);
-
-            // build metadata
-            $metadata = $this->buildMetadata(Spyc::YAMLLoadString($yamlPart), $slug);
-            $metadataFile = fopen($this->compiled . $identifier . '.meta.json', 'w+');
-            fwrite($metadataFile, $metadata);
 
             // build manifest
             $manifest = md5_file($this->dir . $file);
@@ -217,5 +223,18 @@ class FlatFileBlog
     protected function md5Path($identifier)
     {
         return $this->compiled . $identifier . '.md5';
+    }
+
+    /**
+     * @param Array $rawMetadata
+     * @return mixed
+     */
+    protected function normalizeMetadata($rawMetadata)
+    {
+        if (!isset($rawMetadata['title']) && isseT($rawMetadata['headline'])) {
+            $rawMetadata['title'] = $rawMetadata['headline'];
+            return $rawMetadata;
+        }
+        return $rawMetadata;
     }
 }

@@ -29,8 +29,8 @@ class BlogController extends Controller
         }
         return view('blog')
             ->with('post', $post)
-            ->with('next', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getNextFile()))
-            ->with('previous', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getPreviousFile()))
+            ->with('older', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getOlderFile()))
+            ->with('newer', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getNewerFile()))
             ->with('meta', $this->flatFileBlog->getMeta());
     }
     public function post($slug)
@@ -49,9 +49,18 @@ class BlogController extends Controller
         }
         return view('blog')
             ->with('post', $post)
-            ->with('next', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getNextFile($id)))
-            ->with('previous', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getPreviousFile($id)))
+            ->with('older', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getOlderFile($id)))
+            ->with('newer', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getNewerFile($id)))
             ->with('meta', $this->flatFileBlog->getMeta($id));
+    }
+
+    public function getBody($url)
+    {
+        $id = $this->flatFileBlog->getIdFromSlug($url);
+        $post = $this->flatFileBlog->getPost($id);
+        return view('body')
+            ->with('post', $post);
+
     }
 
     public function archive()
