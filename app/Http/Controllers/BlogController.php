@@ -13,8 +13,16 @@ class BlogController extends Controller
         $this->flatFileBlog = $flatFileBlog;
     }
 
+    public function rebuild()
+    {
+        $this->flatFileBlog->clearCache();
+        $this->flatFileBlog->generateContent();
+        return redirect('/');
+    }
+
     public function index()
     {
+        $this->flatFileBlog->generateContent();
         $post = $this->flatFileBlog->getPost();
         if (!$post) {
             return view('errors.404');
@@ -27,6 +35,7 @@ class BlogController extends Controller
     }
     public function post($slug)
     {
+        $this->flatFileBlog->generateContent();
         $id = $this->flatFileBlog->getIdFromSlug($slug);
         if (!$id) {
             // allow IDs as permalinks

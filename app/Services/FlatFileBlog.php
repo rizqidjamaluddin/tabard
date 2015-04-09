@@ -1,4 +1,5 @@
 <?php  namespace App\Services; 
+use Michelf\SmartyPants;
 use Spyc;
 
 class FlatFileBlog
@@ -23,8 +24,7 @@ class FlatFileBlog
 
     public function getPost($id = null)
     {
-        $this->generateContent();
-
+//        $this->generateContent();
         if (!$id) {
             $id = $this->getLatestFile();
         }
@@ -107,10 +107,9 @@ class FlatFileBlog
         return $meta->slug;
     }
 
-    protected function generateContent()
+    public function generateContent()
     {
         $markdown = new \Parsedown();
-
 
         $files = scandir($this->dir);
         foreach ($files as $file) {
@@ -145,6 +144,8 @@ class FlatFileBlog
             }
 
             $parsed = $markdown->parse($mdPart);
+            $parsed = str_replace('&quot;', '"', $parsed);
+            $parsed = SmartyPants::defaultTransform($parsed);
             $htmlFile = fopen($this->compiled . $identifier . '.html', 'w+');
             fwrite($htmlFile, $parsed);
 
@@ -164,6 +165,16 @@ class FlatFileBlog
             }
             $slugFile = fopen($this->slugPath($slug), 'w+');
             fwrite($slugFile, $identifier);
+        }
+    }
+
+    public function clearCache()
+    {
+        $files = glob($this->compiled . '*.*');
+        foreach ($files as $file) {
+            if (in_array(pathinfo($file, PATHINFO_EXTENSION), ['json', 'md5', 'html', 'slug'])) {
+                unlink($file);
+            }
         }
     }
 

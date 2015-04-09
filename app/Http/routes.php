@@ -12,4 +12,5 @@
 */
 
 Route::get('/', 'BlogController@index');
+Route::get('/rebuild', 'BlogController@rebuild');
 Route::get('/{post}', 'BlogController@post');

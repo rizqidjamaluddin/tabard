@@ -7,7 +7,8 @@
 	"require": {
 		"laravel/framework": "5.0.*",
         "erusev/parsedown": "dev-master",
-      "mustangostang/spyc": "0.5.*@dev"
+      "mustangostang/spyc": "0.5.*@dev",
+      "michelf/php-smartypants": "1.6.0-beta1"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "~4.0",
