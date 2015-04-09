@@ -1,0 +1,29 @@
+body {
+    font-family: "expo-sans-pro", sans-serif;
+}
+
+.content {
+    width: 80%;
+    margin: 80px auto;
+}
+
+h1 {
+    font-size: 2.8em;
+    font-weight: bold;
+    color: black;
+}
+
+p {
+    margin: 25px 0;
+    line-height: 1.3em;
+    color: #333;
+}
+
+code {
+    border: 1px solid #ccccd6;
+    background: #f6f6ff;
+    border-radius: 2px;
+    padding: 0 4px;
+    font-size: 0.8em;
+    font-family: "source-code-pro", monospace;
+}

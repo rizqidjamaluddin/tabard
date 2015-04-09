@@ -6,3 +6,5 @@
 /storage/compiled/*.html
 /storage/compiled/*.json
 /storage/compiled/*.md5
+/storage/compiled/*.slug
+.DS_Store

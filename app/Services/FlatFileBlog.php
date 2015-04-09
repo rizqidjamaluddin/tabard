@@ -4,6 +4,7 @@ use Spyc;
 class FlatFileBlog
 {
     protected $dir;
+    protected $compiled;
 
     public function __construct()
     {
@@ -11,8 +12,13 @@ class FlatFileBlog
         $this->compiled = storage_path('compiled/');
     }
 
-    public function getPostIndex()
+    public function getIdFromSlug($slug)
     {
+        if (!file_exists($this->slugPath($slug))) {
+            return null;
+        }
+
+        return file_get_contents($this->slugPath($slug));
     }
 
     public function getPost($id = null)
@@ -32,9 +38,10 @@ class FlatFileBlog
 
     protected function getLatestFile()
     {
-        $files = scandir($this->compiled);
-        sort($files, SORT_NUMERIC);
-        return $this->getIndexFromFilename(end($files));
+        $files = glob($this->compiled . '*.html');
+        sort($files, SORT_NATURAL);
+        array_walk($files, function(&$i){ $i = basename($i); });
+        return pathinfo(end($files), PATHINFO_FILENAME);
     }
 
     public function getMeta($id = null)
@@ -57,8 +64,9 @@ class FlatFileBlog
             $id = $this->getLatestFile();
         }
 
-        $files = scandir($this->compiled);
-        sort($files, SORT_NUMERIC);
+        $files = glob($this->compiled . '*.html');
+        sort($files, SORT_NATURAL);
+        array_walk($files, function(&$i){ $i = basename($i); });
         $files = array_reverse($files);
 
         foreach ($files as $file) {
@@ -77,8 +85,9 @@ class FlatFileBlog
             $id = $this->getLatestFile();
         }
 
-        $files = scandir($this->compiled);
-        sort($files, SORT_NUMERIC);
+        $files = glob($this->compiled . '*.html');
+        sort($files, SORT_NATURAL);
+        array_walk($files, function(&$i){ $i = basename($i); });
 
         foreach ($files as $file) {
             $index = $this->getIndexFromFilename($file);
@@ -87,6 +96,15 @@ class FlatFileBlog
             }
         }
         return null;
+    }
+
+    public function getSlugFromId($id)
+    {
+        if (!file_exists($this->compiled . $id . '.meta.json')) {
+            return null;
+        }
+        $meta = json_decode(file_get_contents($this->compiled . $id . '.meta.json'));
+        return $meta->slug;
     }
 
     protected function generateContent()
@@ -105,15 +123,16 @@ class FlatFileBlog
             }
 
             // check pre-existing
-            if (file_exists($this->compiled . $identifier . '.md5')) {
+            if (file_exists($this->md5Path($identifier))) {
                 // match manifest
-                if (file_get_contents($this->compiled . $identifier . '.md5') == md5_file($this->dir . $file)) {
+                if (file_get_contents($this->md5Path($identifier)) == md5_file($this->dir . $file)) {
                     continue;
                 }
             }
 
             // parse and build
             $fileContents = ltrim(file_get_contents($this->dir . $file), "-\t\n\r\0\x0B");
+            $slug = $this->getSlugFromFilename($file);
 
             // extract yaml top
             if (strpos($fileContents, '---') !== false) {
@@ -130,29 +149,62 @@ class FlatFileBlog
             fwrite($htmlFile, $parsed);
 
             // build metadata
-            $metadata = $this->buildMetadata(Spyc::YAMLLoadString($yamlPart));
+            $metadata = $this->buildMetadata(Spyc::YAMLLoadString($yamlPart), $slug);
             $metadataFile = fopen($this->compiled . $identifier . '.meta.json', 'w+');
             fwrite($metadataFile, $metadata);
 
             // build manifest
             $manifest = md5_file($this->dir . $file);
-            $manifestFile = fopen($this->compiled . $identifier . '.md5', 'w+');
+            $manifestFile = fopen($this->md5Path($identifier), 'w+');
             fwrite($manifestFile, $manifest);
+
+            // build slug
+            if (file_exists($this->slugPath($slug))) {
+                // log that we have a double slug here
+            }
+            $slugFile = fopen($this->slugPath($slug), 'w+');
+            fwrite($slugFile, $identifier);
         }
     }
 
-    protected function buildMetadata(Array $data)
+    protected function buildMetadata(Array $data, $slug = '')
     {
         $data['lastCompiled'] = time();
+        $data['slug'] = $slug;
         return json_encode($data);
     }
 
     protected function getIndexFromFilename($filename)
     {
-        preg_match("~^(\d+)~", $filename, $meta);
-        if (count($meta) == 0) {
+        $filename = pathinfo($filename, PATHINFO_FILENAME);
+        $parts = explode('-', $filename);
+        $idSegment = array_shift($parts);
+        if (ctype_digit($idSegment)) {
+            return (int) $idSegment;
+        } else {
             return null;
         }
-        return (int) $meta[0];
+    }
+
+    protected function getSlugFromFilename($filename)
+    {
+        $filename = pathinfo($filename, PATHINFO_FILENAME);
+        $parts = explode('-', $filename);
+        $idSegment = array_shift($parts);
+        if (ctype_digit($idSegment)) {
+            return implode('-', $parts);
+        } else {
+            return $filename;
+        }
+    }
+
+    protected function slugPath($slug)
+    {
+        return $this->compiled . $slug . '.slug';
+    }
+
+    protected function md5Path($identifier)
+    {
+        return $this->compiled . $identifier . '.md5';
     }
 }

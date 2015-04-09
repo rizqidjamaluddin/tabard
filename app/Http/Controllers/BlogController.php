@@ -21,21 +21,33 @@ class BlogController extends Controller
         }
         return view('blog')
             ->with('post', $post)
-            ->with('next', $this->flatFileBlog->getNextFile())
-            ->with('previous', $this->flatFileBlog->getPreviousFile())
+            ->with('next', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getNextFile()))
+            ->with('previous', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getPreviousFile()))
             ->with('meta', $this->flatFileBlog->getMeta());
     }
-    public function post($id)
+    public function post($slug)
     {
-        $post = $this->flatFileBlog->getPost($id);
-        if (!$post) {
-            return view('errors.404');
+        $id = $this->flatFileBlog->getIdFromSlug($slug);
+        if (!$id) {
+            // allow IDs as permalinks
+            $post = $this->flatFileBlog->getPost($slug);
+            if (!$post) {
+                return view('errors.404');
+            }
+            $id = $slug;
+        } else {
+            $post = $this->flatFileBlog->getPost($id);
         }
         return view('blog')
             ->with('post', $post)
-            ->with('next', $this->flatFileBlog->getNextFile($id))
-            ->with('previous', $this->flatFileBlog->getPreviousFile($id))
+            ->with('next', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getNextFile($id)))
+            ->with('previous', $this->flatFileBlog->getSlugFromId($this->flatFileBlog->getPreviousFile($id)))
             ->with('meta', $this->flatFileBlog->getMeta($id));
+    }
+
+    public function archive()
+    {
+
     }
 
 }
