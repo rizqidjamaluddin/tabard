@@ -9,6 +9,13 @@
 
 @section('content')
 
+    <p class="util">
+        <a href="{{ url($meta->slug) }}">Permalink</a>
+        @if(isset($meta->date))
+            &bull; {{ date("F j, Y", $meta->date) }}
+        @endif
+    </p>
+
 @include('body')
 
     <p class="links">

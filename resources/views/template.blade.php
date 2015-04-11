@@ -13,7 +13,7 @@
 <div class="content language-php">
     
     <div>
-        <img id="psh" src="{{ asset('psh.png') }}" alt="#"/>
+        <a href="{{ url() }}"><img id="psh" src="{{ asset('psh.png') }}" alt="#"/></a>
     </div>
     
     <div class="header">

@@ -178,6 +178,20 @@ strong {
 
 /* Page-specific */
 
+p.util {
+    text-align: center;
+    font-size: 0.7em;
+    margin-bottom: 0;
+}
+
+p.util a{
+    border-bottom: 1px solid transparent;
+}
+
+p.util a:hover{
+    border-bottom: 1px solid #2A4A47;
+}
+
 .archive {
     max-width: 500px;
     margin: 0 auto;
