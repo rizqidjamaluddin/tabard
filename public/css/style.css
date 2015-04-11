@@ -28,6 +28,10 @@ body:before {
         font-size: 20px;
         width: 600px;
     }
+
+    .header {
+        margin-bottom: 40px !important;
+    }
 }
 
 @media screen and (max-width: 600px){
@@ -37,12 +41,19 @@ body:before {
     }
 }
 
+#psh {
+    max-width: 500px;
+    width: 100%;
+    display: block;
+    margin: 20px auto 0;
+}
+
 .header {
     line-height: 1.4em;
     text-align: center;
     font-size: 0.7em;
-    margin-bottom: 80px;
-    margin-top: 60px;
+    margin-bottom: 100px;
+    margin-top: 0px;
     color: #888;
 }
 
