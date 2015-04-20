@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css') }}"/>
     <link rel="stylesheet" href="{{ asset('css/style.css') }}"/>
     <link rel="stylesheet" href="{{ asset('css/prism.css') }}"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> @yield('title', '') The Voices Made Me Write It In PHP</title>
 </head>
 <body>
